@@ -1,7 +1,7 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/cespidh/public_html/v1
+    - export DEPLOYPATH=/home/sivip/public_html/v1
     - /bin/cp -R app $DEPLOYPATH
     - /bin/cp -R public $DEPLOYPATH
     - /bin/cp -R tests $DEPLOYPATH
