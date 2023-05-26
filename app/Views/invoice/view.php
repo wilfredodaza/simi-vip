@@ -1,6 +1,11 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('title') ?> previsualización <?= $this->endSection() ?>
 <?= $this->section('content') ?>
+<style>
+    .letra{
+        font-size: small !important;
+    }
+</style>
 <div id="main">
     <div class="row">
         <div class="breadcrumbs-inline pt-3 pb-1" id="breadcrumbs-wrapper">
@@ -45,8 +50,8 @@
                                 <!-- header section -->
                                 <div class="row invoice-date-number">
                                     <div class="col xl4 s12">
-                                        <span class="invoice-number mr-1"><?= $document->nameDocument ?> #</span>
-                                        <span><?= ($document->resolution ?? $document->id) ?></span>
+                                        <span class="invoice-number letra mr-1"><?= $document->nameDocument ?> #</span>
+                                        <span class="letra"><?= ($document->resolution ?? $document->id) ?></span>
                                     </div>
                                     <div class="col xl8 s12">
                                         <div class="invoice-date display-flex align-items-center flex-wrap">
@@ -62,12 +67,12 @@
                                     </div>
                                 </div>
                                 <!-- logo and title -->
-                                <div class="row mt-3 invoice-logo-title">
+                                <div class="row mt-3 invoice-logo-title no-padding">
                                     <div class="col m6 s12 display-flex invoice-logo mt-1 push-m6">
 
                                     </div>
                                     <div class="col m6 s12 pull-m6">
-                                        <h4 class="indigo-text"><?= $document->nameDocument ?></h4>
+                                        <h5 class="indigo-text"><?= $document->nameDocument ?></h5>
                                         <span></span>
                                     </div>
                                 </div>
@@ -77,33 +82,33 @@
                                     <div class="col m6 s6">
                                         <h6 class="invoice-from">Cliente</h6>
                                         <div class="invoice-address">
-                                            <span>Nombre : <?= $document->name ?></span>
+                                            <span class="letra">Nombre : <?= $document->name ?></span>
+                                        </div>
+                                        <!--<div class="invoice-address">
+                                            <span class="letra">Tipo documento: </span>
                                         </div>
                                         <div class="invoice-address">
-                                            <span>Tipo documento: <?= $document->typeDocumentIdentification ?></span>
-                                        </div>
+                                            <span class="letra">Identificación:</span>
+                                        </div>-->
                                         <div class="invoice-address">
-                                            <span>Identificación: <?= $document->identification ?></span>
-                                        </div>
-                                        <div class="invoice-address">
-                                            <span>Teléfono: <?= ($document->phone ?? 'Sin teléfono') ?></span>
+                                            <span class="letra">Teléfono: <?= ($document->phone ?? 'Sin teléfono') ?></span>
                                         </div>
                                     </div>
                                     <div class="col m6 s6">
                                         <div class="divider show-on-small hide-on-med-and-up mb-3"></div>
                                         <h6 class="invoice-to"><br></h6>
                                         <div class="invoice-address">
-                                            <span>Correo: <?= ($document->email ?? 'Sin correo') ?></span>
+                                            <span class="letra">Ciudad: <?= ($document->municipio ?? 'Sin municipio') ?></span>
                                         </div>
                                         <div class="invoice-address">
-                                            <span>Dirección: <?= ($document->address) ?></span>
+                                            <span class="letra">Dirección: <?= ($document->address) ?></span>
                                         </div>
-                                        <div class="invoice-address">
+                                        <!--<div class="invoice-address">
                                             <span></span>
                                         </div>
                                         <div class="invoice-address">
                                             <span></span>
-                                        </div>
+                                        </div>-->
                                     </div>
                                 </div>
                                 <div class="divider mb-3 mt-3"></div>
@@ -127,11 +132,11 @@
                                             $discount += $item->discount_amount;
                                             ?>
                                             <tr>
-                                                <td><?= $item->name ?></td>
-                                                <td><?= $item->description ?></td>
-                                                <td>$ <?= number_format($item->price_amount, '2', ',', '.') ?></td>
-                                                <td><?= $item->quantity ?></td>
-                                                <td class="indigo-text right-align">
+                                                <td class="letra"><?= $item->name ?></td>
+                                                <td class="letra"><?= $item->description ?></td>
+                                                <td class="letra">$ <?= number_format($item->price_amount, '2', ',', '.') ?></td>
+                                                <td class="letra"><?= $item->quantity ?></td>
+                                                <td class="indigo-text right-align letra">
                                                     $ <?= number_format($item->line_extension_amount, '2', ',', '.') ?></td>
                                             </tr>
                                         <?php endforeach; ?>
@@ -143,7 +148,7 @@
                                 <div class="invoice-subtotal">
                                     <div class="row">
                                         <div class="col m5 s12">
-                                            <p><?= $document->notes ?></p>
+                                            <p class="letra"><?= $document->notes ?></p>
                                         </div>
                                         <div class="col xl4 m7 s12 offset-xl3">
                                             <ul>

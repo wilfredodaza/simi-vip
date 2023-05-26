@@ -25,7 +25,7 @@
 <script>localStorage.setItem('id', <?= $id ?>)</script>
 <script src="<?= base_url() ?>/assets/js/edit_inventory/runtime.58e5c3603de5b46c8a86.js" defer></script>
 <script src="<?= base_url() ?>/assets/js/edit_inventory/polyfills.dacd6549d6eac8a326be.js" defer></script>
-<script src="<?= base_url() ?>/assets/js/edit_inventory/main.622fa1dae3c3888953b8.js" defer></script>
+<script src="<?= base_url() ?>/assets/js/edit_inventory/main.04ea13a3c0bf4e38c61e.js" defer></script>
 <?= $this->endSection() ?>
 
 

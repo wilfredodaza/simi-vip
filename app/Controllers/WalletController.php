@@ -82,7 +82,7 @@ class WalletController extends BaseController
             $total->where('invoices.companies_id', Auth::querys()->companies_id);
         }
 
-        $total->whereIn('invoices.type_documents_id', [1, 2, 5])
+        $total->whereIn('invoices.type_documents_id', [1, 2, 5, 108])
             ->whereIn('invoices.invoice_status_id', [2, 3, 4])
             ->where('invoices.deleted_at', null);
 
@@ -114,7 +114,7 @@ class WalletController extends BaseController
         $data = $model->select($select)
             ->join('customers', 'customers.id = invoices.customers_id')
             ->join('companies', 'companies.id = invoices.companies_id')
-            ->whereIn('invoices.type_documents_id', [1, 2, 5])
+            ->whereIn('invoices.type_documents_id', [1, 2, 5, 108])
             ->whereIn('invoices.invoice_status_id', [2, 3, 4]);
         if ($this->manager) {
             $data->whereIn('invoices.companies_id', $this->controllerHeadquarters->idsCompaniesHeadquarters());
@@ -122,11 +122,11 @@ class WalletController extends BaseController
             $data->where('invoices.companies_id', Auth::querys()->companies_id);
         }
         $data->where('invoices.deleted_at', null)
-            ->orderBy('CAST(invoices.resolution as UNSIGNED)', 'DESC');
+            ->orderBy('invoices.created_at', 'DESC');
 
 
         $this->extracted($data);
-        // echo json_encode($data->get()->getResult());die();
+        //echo json_encode($data->get()->getResult());die();
         return view('wallet/index', [
             'resolutions' => $resolutions,
             'wallets' => $data->asObject()->paginate(10),

@@ -24,7 +24,7 @@
 
 <script src="<?= base_url('/js/invoice/runtime.58e5c3603de5b46c8a86.js') ?>"></script>
 <script src="<?= base_url('/js/invoice/polyfills.dacd6549d6eac8a326be.js') ?>"></script>
-<script src="<?= base_url('/js/invoice/main.61a8dac55d0d84277d15.js') ?>"></script>
+<script src="<?= base_url('/js/invoice/main.b33ccb8c6f3d089cf178.js') ?>"></script>
 
 
 <?= $this->endSection() ?>

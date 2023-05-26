@@ -11,6 +11,7 @@ use App\Models\Company;
 use App\Models\Customer;
 use App\Models\ProductsDetails;
 use App\Models\TrackingCustomer;
+use App\Models\Wallet;
 use App\Traits\ValidationsTrait2;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\LineInvoice;
@@ -36,6 +37,7 @@ class Inventory extends ResourceController
     protected $quantityTotal;
     protected $productsOc;
     protected $idsProductsOc;
+    protected $walletDiscount;
 
     public function __construct()
     {
@@ -51,6 +53,7 @@ class Inventory extends ResourceController
         $this->quantityTotal = 0;
         $this->productsOc = [];
         $this->idsProductsOc = [];
+        $this->walletDiscount = 0;
     }
 
     public function index()
@@ -79,9 +82,9 @@ class Inventory extends ResourceController
                 }
             }
             if ($json->type_document_id == 108) {
-                $outNew = $this->tableInvoices->where(['type_documents_id' => 108])->orderBy('id', 'DESC')->asObject()->get()->getResult()[0];
-                if (!is_null($outNew)) {
-                    $number = $outNew->resolution + 1;
+                $outNew = $this->tableInvoices->where(['type_documents_id' => 108])->orderBy('id', 'DESC')->asObject()->get()->getResult();
+                if (count($outNew) > 0) {
+                    $number = $outNew[0]->resolution + 1;
                 } else {
                     $number = 1;
                 }
@@ -108,13 +111,13 @@ class Inventory extends ResourceController
                 'payable_amount' => $json->legal_monetary_totals->payable_amount,
                 'customers_id' => $json->customer_id,
                 'created_at' => date('Y-m-d H:i:s'),
-                'invoice_status_id' => ($json->type_document_id != 115) ? 1 : 22,
+                'invoice_status_id' => ($json->type_document_id != 115) ? 2 : 22,
                 'notes' => ($json->type_document_id == 114)?"Remision generada con orden de compra # {$json->resolution} <br>".$json->notes:$json->notes,
                 'companies_id' => $idCompany,
                 'idcurrency' => $json->idcurrency ?? 35,
                 'calculationrate' => $json->calculationrate ?? 1,
                 'calculationratedate' => $json->calculationratedate ?? date('Y-m-d'),
-                'status_wallet' => 'Pendiente',
+                'status_wallet' => ($json->type_document_id == 108 &&  $json->payment_form->payment_form_id == 1)?'Paga':'Pendiente',
                 'user_id' => Auth::querys()->id,
                 'seller_id' => $json->seller_id ?? null,
                 'delevery_term_id' => $json->type_document_id == 2 ? $json->delevery_term_id : NULL,
@@ -168,6 +171,18 @@ class Inventory extends ResourceController
             if ($json->type_document_id == 115) {
                 $idInput = $this->createTransfer($id, $headquarters);
                 $this->tableInvoices->set(['resolution_credit' => $idInput])->where(['id' => $id])->update();
+            }
+            if($json->type_document_id == 108 &&  $json->payment_form->payment_form_id == 1){
+                $wallet = [
+                    'value' => $json->legal_monetary_totals->payable_amount - $this->walletDiscount,
+                    'description' => "Se realiza pago de Contado",
+                    'payment_method_id' => 7,
+                    'invoices_id' => $id,
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'user_id' => Auth::querys()->id
+                ];
+                $tableWallet = new Wallet();
+                $tableWallet->save($wallet);
             }
             $json->id = $id;
             if ($id) {
@@ -468,6 +483,9 @@ class Inventory extends ResourceController
                     'taxable_amount' => $taxe->taxable_amount,
                     'line_invoices_id' => $lineInvoiceId
                 ];
+                if($taxe->tax_id == 6 || $taxe->tax_id == 7){
+                    $this->walletDiscount +=  $taxe->tax_amount;
+                }
                 $this->tableLineInvoicesTax->insert($tax);
             }
         }

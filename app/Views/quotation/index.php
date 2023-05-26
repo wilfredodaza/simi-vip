@@ -73,7 +73,7 @@
                                             </td>
                                             <td width="100px">
                                                 <div class="btn-group" role="group">
-                                                    <a href="<?= base_url() ?>/invoice/pdf/<?= $item['companies_id'] ?>/<?= $item['id_invoice'] ?>"
+                                                    <a href="<?= base_url() ?>/reports/view/<?= $item['id_invoice'] ?>"
                                                        class="btn btn-small  pink darken-1  tooltipped"
                                                       data-position="top"
                                                        data-tooltip="Descargar cotización"

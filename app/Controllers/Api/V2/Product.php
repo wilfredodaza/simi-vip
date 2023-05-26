@@ -58,6 +58,7 @@ class Product extends ResourceController
                     ->getResult();
             }else{
                 $products = $this->model
+                    ->where(['tax_iva != ' => ''])
                     ->whereIN('companies_id', $this->controllerHeadquarters->idsCompaniesHeadquarters(Auth::querys()->companies_id))
                     ->asObject()
                     ->get()

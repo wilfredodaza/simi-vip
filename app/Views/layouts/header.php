@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta name="description"
-          content="Mi Factura Legal.">
+          content="Nevao">
     <meta name="keywords"
           content="materialize, admin template, dashboard template, flat admin template, responsive admin template, eCommerce dashboard, analytic dashboard">
     <meta name="author" content="ThemeSelect">
@@ -34,14 +34,11 @@
 
     <script src="<?= base_url() ?>/assets/ckeditor/ckeditor.js"></script>
       <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link rel="shortcut icon" href="<?= base_url('assets/img/42x42.png'); ?>">
-    <meta property="og:title" content="<?=(isset($_GET['v']))?'Bono de $30.000 en cualquier plan. Aplica solo usando este enlace.':'Mi factura legal - Factura electronica';?>" />
+    <link rel="shortcut icon" href="<?= base_url('assets/img/nevao.jpg'); ?>">
     <meta property="og:type" content="website" />
     <meta property="og:url" content="" />
-    <meta property="og:image" content="https://www.mifacturalegal.com/seo-agency/img/logo6.png" />
-    <meta property="og:description" content="<?=(isset($_GET['v']))?'Mi factura legal - Factura electronica':'Conoce nuestro nuevo Plan Básico. Cuentas con el respaldo y acompañamiento en la facturación electrónica y validación DIAN. 
-    Nuevos módulos de cuentas contables y cartera Online.';?>" />
-    <meta property="og:site_name" content="www.mifacturalegal.com" />
+    <meta property="og:image" content="" />
+    <meta property="og:site_name" content="nevao.net" />
 
 </head>
 <body class="vertical-layout page-header-light vertical-menu-collapsible  vertical-dark-menu preload-transitions 2-columns   "

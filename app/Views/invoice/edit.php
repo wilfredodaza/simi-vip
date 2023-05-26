@@ -24,7 +24,7 @@
 <script>localStorage.setItem('id', <?= $id ?>)</script>
 <script src="<?= base_url('/js/edit_invoice/runtime.58e5c3603de5b46c8a86.js') ?>"></script>
 <script src="<?= base_url('/js/edit_invoice/polyfills.dacd6549d6eac8a326be.js') ?>"></script>
-<script src="<?= base_url('/js/edit_invoice/main.caa5c851f213006f9ef7.js') ?>"></script>
+<script src="<?= base_url('/js/edit_invoice/main.7bf0673d63809f46be5d.js') ?>"></script>
 
 
 <?= $this->endSection() ?>

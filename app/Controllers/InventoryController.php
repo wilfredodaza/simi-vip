@@ -100,7 +100,8 @@ class InventoryController extends BaseController
         $data = [
             'company' => $company,
             'documents' => $invoices->paginate(10),
-            'pager' => $invoices->pager
+            'pager' => $invoices->pager,
+            'manager' => $manager
         ];
         return view('inventory/index', $data);
     }
@@ -743,7 +744,11 @@ class InventoryController extends BaseController
         $products->groupBy('prod.id')
             ->asObject();
         $total = $products->first();
-        return ($total->input + $total->inputTransfer) - ($total->output + $total->outputTransfer);
+        if(is_null($total)){
+            return 0;
+        }else{
+            return ($total->input + $total->inputTransfer) - ($total->output + $total->outputTransfer);
+        }
     }
 
     private function totalIndicatorsInventory($idsCompanies){
@@ -752,7 +757,7 @@ class InventoryController extends BaseController
         $invoice = new Invoice();
         $invoices = $invoice->select([
             'line_invoices.quantity',
-            'line_invoices.price_amount',
+            'products.valor',
             'products.cost',
             'invoices.type_documents_id'
         ])->join('line_invoices', 'invoices.id = line_invoices.invoices_id')
@@ -766,10 +771,11 @@ class InventoryController extends BaseController
         $idOutPuts = [1, 2, 5, 103, 108,115];
         foreach($totals as $total){
             if(in_array($total->type_documents_id, $idInputs)){
-                $cost = ($total->price_amount == 0)? $total->cost: $total->price_amount;
-                $input = $input + ($total->quantity * $cost);
+                $input = $input + ($total->quantity * $total->cost);
+                $output = $output + ($total->quantity * $total->valor);
             }else{
-                $output = $output + ($total->quantity * $total->price_amount);
+                $input = $input - ($total->quantity * $total->cost);
+                $output = $output - ($total->quantity * $total->valor);
             }
         }
         return (object)[

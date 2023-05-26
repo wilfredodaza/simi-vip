@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Controllers\Api\Auth;
 use App\Models\Invoice;
+use App\Models\TrackingCustomer;
 
 
 class QuotationController extends BaseController
@@ -54,21 +55,21 @@ class QuotationController extends BaseController
         if(count($invoices) > 0 ){
             $client = \Config\Services::curlrequest();
             $res = $client->post(getenv('API').'/quotation/email',
-            [
-                'form_params' => [
-                    'email'                 => $invoices[0]->email ,
-                    'email2'                => $invoices[0]->email2,
-                    'email3'                => $invoices[0]->email3,
-                    'name'                  => $invoices[0]->name,
-                    'identification_number' => $invoices[0]->identification_number,
-                    'resolution'            => $invoices[0]->resolution,
-                    'email_company'         => $invoices[0]->email_company
-                ],
-                'headers' => [
-                    'Accept' => 'application/json'
-                ],
+                [
+                    'form_params' => [
+                        'email'                 => $invoices[0]->email ,
+                        'email2'                => $invoices[0]->email2,
+                        'email3'                => $invoices[0]->email3,
+                        'name'                  => $invoices[0]->name,
+                        'identification_number' => $invoices[0]->identification_number,
+                        'resolution'            => $invoices[0]->resolution,
+                        'email_company'         => $invoices[0]->email_company
+                    ],
+                    'headers' => [
+                        'Accept' => 'application/json'
+                    ],
 
-            ]);
+                ]);
 
             $response = json_decode($res->getBody());
 
@@ -109,5 +110,27 @@ class QuotationController extends BaseController
             $campo = 'invoices.resolution';
         }
         return $campo;
+    }
+
+    public function close($id = null)
+    {
+        $invoice = new Invoice();
+        $invoice->update(['id' => $id], ['invoice_status_id' => 6]);
+
+
+
+
+        $tracking = new TrackingCustomer();
+        $data = [
+            'message'           => 'El usuario '.session('user')->username.' hace el cierre de la cotizacion el dia '.date('Y-m-d H:i:s'). '.',
+            'username'          => session('user')->username,
+            'created_at'        => date('Y-m-d H:i:s'),
+            'table_id'          => $id,
+            'companies_id'      => session('user')->companies_id,
+            'type_tracking_id'  => 1,
+        ];
+        $tracking->save($data);
+
+        return redirect()->to(base_url('quotation'))->with('success','La cotización fue cerrada exitosamente');
     }
 }

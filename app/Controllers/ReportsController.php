@@ -344,9 +344,11 @@ class ReportsController extends BaseController
                 'customers.address',
                 'customers.email',
                 'type_documents.name as nameDocument',
-                'type_document_identifications.name as typeDocumentIdentification'
+                'type_document_identifications.name as typeDocumentIdentification',
+                'municipalities.name as municipio'
             ])
             ->join('customers', 'customers.id = invoices.customers_id')
+            ->join('municipalities', 'customers.municipality_id = municipalities.id', 'left')
             ->join('type_documents', 'invoices.type_documents_id = type_documents.id')
             ->join('type_document_identifications', 'customers.type_document_identifications_id = type_document_identifications.id')
             ->where(['invoices.id' => $id])->asObject()->first();

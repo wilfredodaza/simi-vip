@@ -20,7 +20,7 @@
 <?= $this->section('scripts') ?>
 <script src="<?= base_url() ?>/assets/js/out_create_inventory/runtime.58e5c3603de5b46c8a86.js" defer></script>
 <script src="<?= base_url() ?>/assets/js/out_create_inventory/polyfills.dacd6549d6eac8a326be.js" defer></script>
-<script src="<?= base_url() ?>/assets/js/out_create_inventory/main.982af5c3bf9cbf75861d.js" defer></script>
+<script src="<?= base_url() ?>/assets/js/out_create_inventory/main.b77688b5acc77bf961ef.js" defer></script>
 <!--<script src="<?= base_url() ?>/assets/js/out_create_inventory/runtime.58e5c3603de5b46c8a86.js" defer></script>
 <script src="<?= base_url() ?>/assets/js/out_create_inventory/polyfills.dacd6549d6eac8a326be.js" defer></script>
 <script src="<?= base_url() ?>/assets/js/out_create_inventory/main.7a94be7428125c8c6d33.js" defer></script>-->

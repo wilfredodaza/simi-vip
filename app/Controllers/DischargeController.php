@@ -12,6 +12,7 @@ use App\Controllers\Api\Auth;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\Notification;
 use App\Models\PaymentMethodCompany;
 use App\Models\Wallet;
 use App\Models\Resolution;
@@ -77,12 +78,11 @@ class DischargeController extends WalletController
         }
 
         $total->whereIn('invoices.type_documents_id', [11,105,106,107,118])
-            //->whereIn('invoices.invoice_status_id', [2, 3, 4])
             ->where('invoices.deleted_at', null);
 
         $this->extracted($total);
 
-        $total->orderBy('invoices.id', 'DESC')
+        $total->orderBy('invoices.created_at', 'DESC')
             ->groupBy('invoices.id')
             ->asObject();
 
@@ -95,14 +95,13 @@ class DischargeController extends WalletController
             ->join('customers', 'customers.id = invoices.customers_id')
             ->join('companies', 'companies.id = invoices.companies_id')
             ->whereIn('invoices.type_documents_id', [11,105,106,107,118]);
-            //->whereIn('invoices.invoice_status_id', [2, 3, 4]);
         if ($this->manager) {
             $data->whereIn('invoices.companies_id', $this->controllerHeadquarters->idsCompaniesHeadquarters());
         } else {
             $data->where('invoices.companies_id', Auth::querys()->companies_id);
         }
         $data->where('invoices.deleted_at', null)
-            ->orderBy('CAST(invoices.resolution as UNSIGNED)', 'DESC');
+            ->orderBy('invoices.created_at', 'DESC');
 
 
         $this->extracted($data);
@@ -390,6 +389,46 @@ class DischargeController extends WalletController
             $paysInvoice->payable_amount = $paysInvoice->payable_amount - $valueDischarge;
         }
         return $paysInvoices;
+    }
+
+    /**
+     * Metodo encargao de validar los pagos a proveedores que ya estan vencidos
+     * @throws \ReflectionException
+     */
+    public function validateExpiration(){
+        $invoice = new Invoice();
+        $fechaActual = date('Y-m-d');
+        $datetime2 = date_create($fechaActual);
+        $invoices = $invoice
+            ->select('
+            invoices.id,
+            invoices.created_at,
+            invoices.duration_measure,
+            invoices.resolution
+            ')
+            ->where(['invoices.type_documents_id' => 107, 'status_wallet !=' => 'Paga' ])->asObject()->get()->getResult();
+        foreach ($invoices as $order){
+            $datetime1 = date_create(date('Y-m-d', strtotime($order->created_at)));
+            $contador = date_diff($datetime1, $datetime2);
+            $differenceFormat = '%a';
+            $diferencia =$contador->format($differenceFormat);
+            if($order->duration_measure != 0 && $diferencia > $order->duration_measure){
+                $notificacion = new Notification();
+                $data = [
+                    'title' => "Pago a proveedor con # {$order->resolution} Id N° {$order->id}",
+                    'body' => "No se a registrado el pago completo de a proveedor de la entrada # {$order->resolution} con id N° {$order->id}",
+                    'icon' => 'receipt',
+                    'color' => 'cyan',
+                    'companies_id' => session('user')->companies_id,
+                    'status' => 'Active',
+                    'created_at' => date('Y-m-d'),
+                    'view' => 'false',
+                    'type_document_id' => 107,
+                    'url' => "discharge?resolution{$order->resolution}"
+                ];
+                $notificacion->save($data);
+            }
+        }
     }
 
 

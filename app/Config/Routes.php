@@ -242,6 +242,11 @@
             $routes->post('expenses', 'Api\Expenses::create');
             $routes->get('expenses/edit/(:num)', 'Api\Expenses::edit/$1');
             $routes->post('expenses/update/(:num)', 'Api\Expenses::update/$1');
+
+            // QUOTATION
+            $routes->post('quotation/store', 'Api\Quotation::store');
+            $routes->get('quotation/invoice/(:segment)', 'Api\Quotation::invoice/$1');
+            $routes->post('quotation/update/(:segment)', 'Api\Quotation::update/$1');
         });
 
 
@@ -472,6 +477,7 @@
     $routes->get('quotation/create', 'QuotationController::create');
     $routes->get('quotation/edit/(:segment)', 'QuotationController::edit/$1');
     $routes->get('quotation/email/(:segment)', 'QuotationController::email/$1');
+    $routes->get('quotation/close/(:num)', 'QuotationController::close/$1');
 
 
 
@@ -679,6 +685,7 @@
             $routes->resource('invoices',       ['controller' =>'Api\V2\Invoice']);
             $routes->resource('inventories',    ['controller' =>'Api\V2\Inventory']);
             $routes->resource('customers',    ['controller' =>'Api\Customer']);
+            $routes->resource('quotation',      ['controller' =>'Api\Quotation']);
         });
     });
 

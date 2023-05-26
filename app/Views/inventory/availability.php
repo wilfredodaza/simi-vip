@@ -25,27 +25,33 @@
                     </div>
                 </div>
             </div>
-            <?php foreach ($indicadores as $indicador): ?>
-                <div class="col s12 m6 l6">
-                    <div class="card padding-4 animate fadeLeft shop">
-                        <div class="row">
-                            <div class="col s6 align-items-center" id="indicador-<?= $indicador->id ?>">
-                                <h5 class="mb-0"><?= '$ ' . number_format(($indicador->total), '0', ',', '.') ?></h5>
-                                <p class="no-margin" style="line-height:1;"><?= $indicador->name ?><br>
-                                    <span class="no-padding no-margin" style="font-size: 10px !important;"><?= $indicador->observaciones ?></span></p>
+            <?php
+            if ($manager):
+                foreach ($indicadores as $indicador): ?>
+                    <div class="col s12 m6 l6">
+                        <div class="card padding-4 animate fadeLeft shop">
+                            <div class="row">
+                                <div class="col s6 align-items-center" id="indicador-<?= $indicador->id ?>">
+                                    <h5 class="mb-0"><?= '$ ' . number_format(($indicador->total), '0', ',', '.') ?></h5>
+                                    <p class="no-margin" style="line-height:1;"><?= $indicador->name ?><br>
+                                        <span class="no-padding no-margin"
+                                              style="font-size: 10px !important;"><?= $indicador->observaciones ?></span>
+                                    </p>
 
-                                <!-- <p class="mb-0 pt-8 tooltipped" data-position="bottom" data-delay="50" data-html="true" data-tooltip="  <i class='material-icons text-green green-text tiny'>brightness_1</i> 2 Por vencerse
-                                <br><i class='material-icons text-yellow yellow-text tiny'>brightness_1</i> 0 Por vencerse
-                                <br><i class='material-icons text-red red-text tiny'>brightness_1</i> 1 Por vencerse "> <strong> 3 </strong> por vencer <i class="material-icons text-red red-text tiny">brightness_1</i></p> -->
-                            </div>
+                                    <!-- <p class="mb-0 pt-8 tooltipped" data-position="bottom" data-delay="50" data-html="true" data-tooltip="  <i class='material-icons text-green green-text tiny'>brightness_1</i> 2 Por vencerse
+                                    <br><i class='material-icons text-yellow yellow-text tiny'>brightness_1</i> 0 Por vencerse
+                                    <br><i class='material-icons text-red red-text tiny'>brightness_1</i> 1 Por vencerse "> <strong> 3 </strong> por vencer <i class="material-icons text-red red-text tiny">brightness_1</i></p> -->
+                                </div>
 
-                            <div class="col s6 icon align-items-center">
-                                <i class="material-icons <?= $indicador->color ?> background-round mt-5 white-text right"><?= $indicador->icon ?></i>
+                                <div class="col s6 icon align-items-center">
+                                    <i class="material-icons <?= $indicador->color ?> background-round mt-5 white-text right"><?= $indicador->icon ?></i>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach;
+            endif;
+            ?>
         </div>
         <div class="col s12">
             <div class="container">
@@ -61,11 +67,14 @@
                                         Quitar Filtro
                                     </a>
                                 <?php endif; ?>
-                                <button <?= (!$manager)?'disabled':'' ?> data-target="filter" style="margin-left: 5px;"
-                                                                         class="right btn btn-small btn-light-indigo modal-trigger step-5 active-red">
+                                <button <?= (!$manager) ? 'disabled' : '' ?> data-target="filter"
+                                                                             style="margin-left: 5px;"
+                                                                             class="right btn btn-small btn-light-indigo modal-trigger step-5 active-red">
                                     Filtrar <i class="material-icons right">filter_list</i>
                                 </button>
-                                <a href="<?=  base_url('inventory/out_transfer') ?>" <?= ($manager)?'disabled':'' ?> class="btn-small  btn-light-indigo right" style="margin-bottom:20px; padding-right: 10px; padding-left: 10px;" >
+                                <a href="<?= base_url('inventory/out_transfer') ?>" <?= ($manager) ? 'disabled' : '' ?>
+                                   class="btn-small  btn-light-indigo right"
+                                   style="margin-bottom:20px; padding-right: 10px; padding-left: 10px;">
                                     <i class="material-icons right">add</i>
                                     Realizar transferencia
                                 </a>
@@ -88,33 +97,37 @@
                                         <?php foreach ($products as $item):
                                             $input = $item->input + $item->inputTransfer;
                                             $output = $item->output + $item->outputTransfer;
-                                            $available = ($item->availability_input+$item->availability_input_transfer) - ($item->availability_output+$item->availability_output_transfer);
+                                            $available = ($item->availability_input + $item->availability_input_transfer) - ($item->availability_output + $item->availability_output_transfer);
                                             ?>
                                             <tr>
-                                                <td><?=  $item->name ?> - <?= $item->tax_iva ?></td>
-                                                <td class="center"><?=  $input ?></td>
-                                                <td class="center"><?=  $output ?></td>
-                                                <td class="center"><?=  $input - $output ?></td>
-                                                <td class="center"><?=  number_format(($available), 2, ',', '.') ?></td>
+                                                <td><?= $item->name ?> - <?= $item->tax_iva ?></td>
+                                                <td class="center"><?= $input ?></td>
+                                                <td class="center"><?= $output ?></td>
+                                                <td class="center"><?= $input - $output ?></td>
+                                                <td class="center"><?= number_format(($available), 2, ',', '.') ?></td>
                                                 <td class="center">
                                                     <div class="btn-group">
-                                                        <?php if(isset($_GET['headquarter'])): ?>
-                                                            <a href="<?= base_url('inventory/kardex/'.$item->id.'?headquarter='.$_GET['headquarter'] ) ?>" class="btn red darken-2 tooltipped"  data-position="top" data-tooltip="Kardex">
+                                                        <?php if (isset($_GET['headquarter'])): ?>
+                                                            <a href="<?= base_url('inventory/kardex/' . $item->id . '?headquarter=' . $_GET['headquarter']) ?>"
+                                                               class="btn red darken-2 tooltipped" data-position="top"
+                                                               data-tooltip="Kardex">
                                                                 <i class="material-icons">description</i>
                                                             </a>
                                                         <?php else: ?>
-                                                            <a href="<?= base_url('inventory/kardex/'.$item->id) ?>" class="btn red darken-2 tooltipped"  data-position="top" data-tooltip="Kardex">
+                                                            <a href="<?= base_url('inventory/kardex/' . $item->id) ?>"
+                                                               class="btn red darken-2 tooltipped" data-position="top"
+                                                               data-tooltip="Kardex">
                                                                 <i class="material-icons">description</i>
                                                             </a>
-                                                        <?php endif;?>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
                                         </tbody>
                                     </table>
-                                    <?php if(count($products) == 0): ?>
-                                        <p class="center red-text pt-1" >No hay ningún producto con disponibilidad.</p>
+                                    <?php if (count($products) == 0): ?>
+                                        <p class="center red-text pt-1">No hay ningún producto con disponibilidad.</p>
                                     <?php endif ?>
                                     <?= $pager->links() ?>
                                 </div>
@@ -130,14 +143,16 @@
 <!-- modal transfer -->
 <div id="modalTransfer" class="modal" role="dialog" style="height:auto; width: 600px">
     <div class="modal-content">
-        <form action="<?=  base_url().route_to('inventory-transfer') ?>" method="post" id="transfer">
+        <form action="<?= base_url() . route_to('inventory-transfer') ?>" method="post" id="transfer">
             <div class="row">
                 <div class="col s12 m12 l12">
                     <div class="input-field">
-                        <select class="select2 browser-default validate" id="headquarterId" name="headquarterId" required>
-                            <option selected disabled  value="">Seleccione una sede</option>
-                            <?php foreach($headquarters as $headquarter): ?>
-                                <option <?= ($headquarter->id == company()->id)?'disabled':'' ?> value="<?= $headquarter->id ?>"><?= $headquarter->company ?></option>
+                        <select class="select2 browser-default validate" id="headquarterId" name="headquarterId"
+                                required>
+                            <option selected disabled value="">Seleccione una sede</option>
+                            <?php foreach ($headquarters as $headquarter): ?>
+                                <option <?= ($headquarter->id == company()->id) ? 'disabled' : '' ?>
+                                        value="<?= $headquarter->id ?>"><?= $headquarter->company ?></option>
                             <?php endforeach; ?>
                         </select>
                         <label for="headquarterId">Sede a transferir <span class='red-text'> * </span></label>
@@ -147,7 +162,7 @@
                     <div class="input-field">
                         <select class="select2 browser-default validate" id="productId" name="productId" required>
                             <option selected disabled value="">Seleccione un producto</option>
-                            <?php foreach($productsTransfer as $productTransfer): ?>
+                            <?php foreach ($productsTransfer as $productTransfer): ?>
                                 <option value="<?= $productTransfer->id ?>"><?= $productTransfer->name ?></option>
                             <?php endforeach; ?>
                         </select>
@@ -164,7 +179,8 @@
             <div class="row">
                 <div class="col s12 m12 l12">
                     <button type="submit" class="btn btn-light-indigo right ml-2">Transferir</button>
-                    <a href="#!" onclick="clearForm()" class="modal-action modal-close btn btn-light-red right">Cancelar</a>
+                    <a href="#!" onclick="clearForm()"
+                       class="modal-action modal-close btn btn-light-red right">Cancelar</a>
                 </div>
             </div>
         </form>
@@ -179,9 +195,10 @@
                 <div class="col s12 m6 input-field">
                     <select class="select2 browser-default validate" name="headquarter" id="headquarter">
                         <option selected disabled value="">Seleccione una Sede</option>
-                        <?php foreach($headquarters as $headquarter): ?>
-                            <option <?= (isset($_GET['headquarter']) && $_GET['headquarter'] == $headquarter->id)?'selected':'' ?> value="<?= $headquarter->id ?>"><?= $headquarter->company ?></option>
-                        <?php endforeach;?>
+                        <?php foreach ($headquarters as $headquarter): ?>
+                            <option <?= (isset($_GET['headquarter']) && $_GET['headquarter'] == $headquarter->id) ? 'selected' : '' ?>
+                                    value="<?= $headquarter->id ?>"><?= $headquarter->company ?></option>
+                        <?php endforeach; ?>
                     </select>
                     <label for="headquarter">Sedes</label>
                 </div>
@@ -206,7 +223,7 @@
 </form>
 
 
-<?=  $this->endSection() ?>
+<?= $this->endSection() ?>
 <?= $this->section('scripts') ?>
 <script src="<?= base_url('/js/advance-ui-modals.js') ?>"></script>
 <script>
@@ -214,9 +231,10 @@
         dropdownAutoWidth: true,
         width: '100%'
     });
+
     function clearForm() {
         document.getElementById('transfer').reset();
     }
 </script>
-<?=  $this->endSection() ?>
+<?= $this->endSection() ?>
 

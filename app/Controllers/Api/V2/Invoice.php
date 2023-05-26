@@ -9,6 +9,7 @@ use App\Controllers\ApiController;
 use App\Controllers\HeadquartersController;
 use App\Models\LineInvoice;
 use App\Models\LineInvoiceTax;
+use App\Models\Wallet;
 use App\Traits\ResponseApiTrait;
 use App\Traits\ValidationsTrait2;
 use App\Models\Resolution;
@@ -63,6 +64,7 @@ class Invoice extends ResourceController
         if(!$validate) {
             return $this->respondHTTP422();
         } else {
+            $walletDiscount = 0;
             if($manager){
                 $idCompany = $headquartersController->idSearchBodega();
             }else{
@@ -91,7 +93,7 @@ class Invoice extends ResourceController
                 'idcurrency'                => $json->currency_id ?? 35,
                 'calculationrate'           => isset($json->currency_rate) ? (float) $json->currency_rate : 1,
                 'calculationratedate'       => $json->currency_rate_date ?? date('Y-m-d'),
-                'status_wallet'             => 'Pendiente',
+                'status_wallet'             => ($json->payment_form->payment_form_id == 1)?'Paga':'Pendiente',
                 'user_id'                   => Auth::querys()->id,
                 'seller_id'                 => $json->seller_id ?? null,
                 'delevery_term_id'          => $json->type_document_id == 2 ? $json->delevery_term_id : NULL,
@@ -124,9 +126,24 @@ class Invoice extends ResourceController
                         'taxable_amount'    => (float) $taxe->taxable_amount,
                         'line_invoices_id'  => $lineInvoiceId
                     ];
+                    if($taxe->tax_id == 6 || $taxe->tax_id == 7){
+                        $walletDiscount +=  $taxe->tax_amount;
+                    }
                     $lineInvoiceTax = new LineInvoiceTax();
                     $lineInvoiceTax->insert($tax);
                 }
+            }
+            if($json->payment_form->payment_form_id == 1){
+                $wallet = [
+                    'value' => $json->legal_monetary_totals->payable_amount - $walletDiscount,
+                    'description' => "Se realiza pago de Contado",
+                    'payment_method_id' => 7,
+                    'invoices_id' => $id,
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'user_id' => Auth::querys()->id
+                ];
+                $tableWallet = new Wallet();
+                $tableWallet->save($wallet);
             }
             $json->id = $id;
             if ($id) {

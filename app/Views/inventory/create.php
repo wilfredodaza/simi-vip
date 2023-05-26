@@ -21,6 +21,6 @@
 
 <script src="<?= base_url() ?>/assets/js/create_inventory_invoice/runtime.58e5c3603de5b46c8a86.js" defer></script>
 <script src="<?= base_url() ?>/assets/js/create_inventory_invoice/polyfills.dacd6549d6eac8a326be.js" defer></script>
-<script src="<?= base_url() ?>/assets/js/create_inventory_invoice/main.20dceda9d37bcd919f75.js" defer></script>
+<script src="<?= base_url() ?>/assets/js/create_inventory_invoice/main.9fca4dbe1dd72dc180b5.js" defer></script>
 
 <?= $this->endSection() ?>
